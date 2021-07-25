@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,7 @@ namespace Titinski.WebAPI.Handlers
 {
     public interface IMainHandler
     {
-        public IActionResult GetRantAsync();
+        public Task<IActionResult> GetRantAsync();
+        public Task<IActionResult> OnPostUploadAsync(List<IFormFile> files);
     }
 }
