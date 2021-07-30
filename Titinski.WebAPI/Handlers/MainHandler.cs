@@ -5,27 +5,30 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Titinski.WebAPI.Services.ImageRepository;
 
 namespace Titinski.WebAPI.Handlers
 {
     public class MainHandler : IMainHandler
     {
         private readonly ILogger<MainHandler> _logger;
+        private readonly IImageRepo _imageRepo;
         private readonly Random _rnd;
 
         public MainHandler(
-            ILogger<MainHandler> logger
+            ILogger<MainHandler> logger,
+            IImageRepo imageRepo
             )
         {
             _logger = logger;
+            _imageRepo = imageRepo;
+
             _rnd = new Random();
         }
 
         public async System.Threading.Tasks.Task<IActionResult> GetRantAsync()
         {
-            var imageBytes = await System.IO.File.ReadAllBytesAsync(".\\Assets\\Images\\ALL-Grainfee-Dog2-spot.jpg");
-            var file = new FileContentResult(imageBytes, "image/jpg");
-            return file;
+            return new OkObjectResult(_imageRepo.GetRant(0));
         }
 
         public async Task<IActionResult> OnPostUploadAsync(List<IFormFile> files)
