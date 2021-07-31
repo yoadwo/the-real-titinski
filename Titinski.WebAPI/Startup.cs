@@ -28,6 +28,7 @@ namespace Titinski.WebAPI
             services.AddControllers();
             services.AddSwaggerGen();
             services.AddScoped<Handlers.IMainHandler, Handlers.MainHandler>();
+            services.AddSingleton<Services.ImageRepository.IImageRepo, Services.ImageRepository.LocalImageRepo>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
