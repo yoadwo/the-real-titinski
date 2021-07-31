@@ -9,6 +9,6 @@ namespace Titinski.WebAPI.Services.ImageRepository
     public interface IImageRepo
     {
         public void AddRant(Rant rant);
-        public Rant GetRant(int id);
+        public Rant GetRant(string id);
     }
 }

@@ -26,47 +26,49 @@ namespace Titinski.WebAPI.Handlers
             _rnd = new Random();
         }
 
-        public async System.Threading.Tasks.Task<IActionResult> GetRantAsync()
+        public async System.Threading.Tasks.Task<IActionResult> GetRantAsync(string id)
         {
-            return new OkObjectResult(_imageRepo.GetRant(0));
+            var savedRant = _imageRepo.GetRant(id);
+            if (savedRant != null)
+            {
+                return new OkObjectResult(savedRant);
+            }
+            else
+            {
+                return new NoContentResult();
+            }
+            
         }
 
-        public async Task<IActionResult> OnPostUploadAsync(List<IFormFile> files)
+        public async Task<IActionResult> OnPostUploadAsync(Models.RantPost newPost)
         {
-            long size = files.Sum(f => f.Length);
+            _logger.LogInformation($"descrption: {newPost.Description}");
+            _logger.LogInformation($"saving file :{newPost.ImageFile.FileName}");
             Models.Rant r;
-            foreach (var formFile in files)
-            {
-                if (formFile.Length > 0)
-                {
-                    /*
-                     * var filePath = ".AssetsSystem.IO.Path.GetRandomFileName();
 
-                    using (var stream = System.IO.File.Create(filePath))
+            if (newPost.ImageFile.Length > 0)
+            {
+                using (var ms = new System.IO.MemoryStream())
+                {
+                    await newPost.ImageFile.CopyToAsync(ms);
+                    var fileBytes = ms.ToArray();
+                    string s = Convert.ToBase64String(fileBytes);
+                    r = new Models.Rant
                     {
-                        await formFile.CopyToAsync(stream);
-                    }
-                     */
-                    
-                    using (var ms = new System.IO.MemoryStream())
-                    {
-                        formFile.CopyTo(ms);
-                        var fileBytes = ms.ToArray();
-                        string s = Convert.ToBase64String(fileBytes);
-                        r = new Models.Rant
-                        {
-                            Description = formFile.FileName,
-                            ImageBase64 = s
-                        };
-                    }
-                    _imageRepo.AddRant(r);
+                        Description = newPost.Description,
+                        ImageBase64 = s
+                    };
                 }
+                _imageRepo.AddRant(r);
+                _logger.LogInformation("file saved.");
+                return new OkObjectResult(r);
+            }
+            else
+            {
+                return new BadRequestObjectResult(new ArgumentException("Empty file"));
             }
 
-            // Process uploaded files
-            // Don't rely on or trust the FileName property without validation.
-
-            return new OkObjectResult(new { count = files.Count, size });
+            
         }
     }
 }
