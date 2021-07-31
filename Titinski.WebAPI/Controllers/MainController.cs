@@ -27,38 +27,20 @@ namespace Titinski.WebAPI.Controllers
         }
 
         [HttpGet]
-        [Route("rant")]
-        public async Task<IActionResult> GetRantAsync()
+        [Route("rant/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> GetRantAsync(string id)
         {
-            return await _mainHandler.GetRantAsync();
-        }
+            return await _mainHandler.GetRantAsync(id);
+        }        
 
-        /*[HttpPost]
-        [Route("rant")]
-        public async Task<IActionResult> OnPostUploadAsync(List<IFormFile> files)
-        {
-            return await _mainHandler.OnPostUploadAsync(files);
-        }*/
-
-        /*//[HttpPost("{id:int}/forms")]
-        [HttpPost]
-        //[ProducesResponseType(typeof(FormSubmissionResult), StatusCodes.Status201Created)]
+        [HttpPost("rantForm")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<FormSubmissionResult>> SubmitForm(int id, [FromForm] StudentForm form)
+        public async Task<IActionResult> SubmitForm([FromForm] Models.RantPost newPost)
         {
-            _logger.LogInformation($"validating the form#{form.FormId} for Student ID={id}");
-            _logger.LogInformation($"saving file [{form.StudentFile.FileName}]");
-            await Task.Delay(1500);
-            _logger.LogInformation("file saved.");
-            var result = new FormSubmissionResult { FormId = form.FormId, StudentId = id };
-            return CreatedAtAction(nameof(ViewForm), new { id, form.FormId }, result);
+            return await _mainHandler.OnPostUploadAsync(newPost);
         }
-
-        public class StudentForm
-        {
-            [Required] public int FormId { get; set; }
-            [Required] public IFormFile StudentFile { get; set; }
-        }*/
-
     }
 }

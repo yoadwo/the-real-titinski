@@ -12,26 +12,30 @@ namespace Titinski.WebAPI.Services.ImageRepository
         public LocalImageRepo()
         {
             Rants = new List<Rant>();
+            var count = 0;
             foreach (var file in System.IO.Directory.GetFiles(".\\Assets\\Images"))
             {
                 var imageBytes = System.IO.File.ReadAllBytes(file);
                 var r = new Rant
                 {
+                    ID = count.ToString(),
                     ImageBase64 = Convert.ToBase64String(imageBytes),
                     Description = new System.IO.FileInfo(file).Name
                 };
                 Rants.Add(r);
-            }                        
+                count++;
+            }
         }
 
         public void AddRant(Rant rant)
         {
-            throw new NotImplementedException();
+            rant.ID = Rants.Count.ToString();
+            Rants.Add(rant);
         }
 
-        public Rant GetRant(int id)
+        public Rant GetRant(string id)
         {
-            return Rants[0];
+            return Rants.FirstOrDefault(r => r.ID == id);
         }
     }
 }
