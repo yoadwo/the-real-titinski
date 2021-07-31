@@ -26,12 +26,13 @@ namespace Titinski.WebAPI.Services.ImageRepository
 
         public void AddRant(Rant rant)
         {
-            throw new NotImplementedException();
+            Rants.Add(rant);
         }
 
         public Rant GetRant(int id)
         {
-            return Rants[0];
+            Random rnd = new Random();
+            return Rants[rnd.Next(Rants.Count - 1)];
         }
     }
 }

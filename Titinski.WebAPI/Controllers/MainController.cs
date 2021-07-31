@@ -33,12 +33,12 @@ namespace Titinski.WebAPI.Controllers
             return await _mainHandler.GetRantAsync();
         }
 
-        /*[HttpPost]
+        [HttpPost]
         [Route("rant")]
         public async Task<IActionResult> OnPostUploadAsync(List<IFormFile> files)
         {
             return await _mainHandler.OnPostUploadAsync(files);
-        }*/
+        }
 
         /*//[HttpPost("{id:int}/forms")]
         [HttpPost]
