@@ -27,8 +27,12 @@ namespace Titinski.WebAPI
         {
             services.AddControllers();
             services.AddSwaggerGen();
+            // handlers
             services.AddScoped<Handlers.IMainHandler, Handlers.MainHandler>();
+            // services
             services.AddSingleton<Services.ImageRepository.IImageRepo, Services.ImageRepository.LocalImageRepo>();
+            // configurations
+            services.Configure<AppSettings.SqlConfig>(Configuration.GetSection("App:Sql"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

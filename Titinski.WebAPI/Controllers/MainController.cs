@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -14,16 +15,19 @@ namespace Titinski.WebAPI.Controllers
     public class MainController : ControllerBase
     {
         private readonly ILogger<MainController> _logger;
+        private readonly IOptions<AppSettings.SqlConfig> _sqlConfig;
 
         private IMainHandler _mainHandler;
 
         public MainController(
             IMainHandler mainHandler,
-            ILogger<MainController> logger
+            ILogger<MainController> logger,
+            IOptions<AppSettings.SqlConfig> sqlConfig
             )
         {
             _mainHandler = mainHandler;
             _logger = logger;
+            _sqlConfig = sqlConfig;
         }
 
         [HttpGet]
