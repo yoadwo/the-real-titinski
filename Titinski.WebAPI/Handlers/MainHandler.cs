@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +13,13 @@ namespace Titinski.WebAPI.Handlers
     public class MainHandler : IMainHandler
     {
         private readonly ILogger<MainHandler> _logger;
+        private readonly IOptions<AppSettings.SqlConfig> _sqlConfig;
         private readonly IImageRepo _imageRepo;
         private readonly Random _rnd;
 
         public MainHandler(
-            ILogger<MainHandler> logger,
+            ILogger<MainHandler> logger,,
+            IOptions<AppSettings.SqlConfig> sqlConfig,
             IImageRepo imageRepo
             )
         {

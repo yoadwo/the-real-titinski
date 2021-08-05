@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -14,7 +15,6 @@ namespace Titinski.WebAPI.Controllers
     public class MainController : ControllerBase
     {
         private readonly ILogger<MainController> _logger;
-
         private IMainHandler _mainHandler;
 
         public MainController(
