@@ -30,7 +30,8 @@ namespace Titinski.WebAPI
             // handlers
             services.AddScoped<Handlers.IMainHandler, Handlers.MainHandler>();
             // services
-            services.AddSingleton<Services.ImageRepository.IImageRepo, Services.ImageRepository.LocalImageRepo>();
+            services.AddSingleton<Services.ImageMetadataRepository.IImageMetadataRepo, Services.ImageMetadataRepository.SqlRepo>();
+            services.AddSingleton<Services.ImageRepository.IImageRepo, Services.ImageRepository.FtpRepo>();
             // configurations
             services.Configure<AppSettings.SqlConfig>(Configuration.GetSection("App:Sql"));
             services.Configure<AppSettings.FtpConfig>(Configuration.GetSection("App:Ftp"));
