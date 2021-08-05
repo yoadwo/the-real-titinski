@@ -27,10 +27,15 @@ namespace Titinski.WebAPI.Services.ImageRepository
             }
         }
 
-        public void AddRant(Rant rant)
+        public void AddRant(RantPost rant)
         {
-            rant.ID = Rants.Count.ToString();
-            Rants.Add(rant);
+            var r = new Rant
+            {
+                ID = Rants.Count.ToString(),
+                Description = rant.Description
+
+            };
+            Rants.Add(r);
         }
 
         public Rant GetRant(string id)

@@ -7,24 +7,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Titinski.WebAPI.Services.ImageRepository;
+using Titinski.WebAPI.Services.ImageMetadataRepository;
 
 namespace Titinski.WebAPI.Handlers
 {
     public class MainHandler : IMainHandler
     {
         private readonly ILogger<MainHandler> _logger;
-        private readonly IOptions<AppSettings.SqlConfig> _sqlConfig;
         private readonly IImageRepo _imageRepo;
+        private readonly IImageMetadataRepo _imageMetadataRepo;
         private readonly Random _rnd;
 
         public MainHandler(
-            ILogger<MainHandler> logger,,
-            IOptions<AppSettings.SqlConfig> sqlConfig,
-            IImageRepo imageRepo
+            ILogger<MainHandler> logger,
+            IImageRepo imageRepo,
+            IImageMetadataRepo metadataRepo
             )
         {
             _logger = logger;
             _imageRepo = imageRepo;
+            _imageMetadataRepo = metadataRepo;
 
             _rnd = new Random();
         }
@@ -47,24 +49,26 @@ namespace Titinski.WebAPI.Handlers
         {
             _logger.LogInformation($"descrption: {newPost.Description}");
             _logger.LogInformation($"saving file :{newPost.ImageFile.FileName}");
-            Models.Rant r;
+            Models.Rant r = new Models.Rant();
 
             if (newPost.ImageFile.Length > 0)
             {
-                using (var ms = new System.IO.MemoryStream())
+                try
                 {
-                    await newPost.ImageFile.CopyToAsync(ms);
-                    var fileBytes = ms.ToArray();
-                    string s = Convert.ToBase64String(fileBytes);
-                    r = new Models.Rant
-                    {
-                        Description = newPost.Description,
-                        ImageBase64 = s
-                    };
+                    // populates Rant.Path
+                    _imageRepo.AddRant(newPost);
+                    _imageMetadataRepo.AddRant(newPost);
+
+                    _logger.LogInformation("file saved.");
+                    return new OkObjectResult(r);
                 }
-                _imageRepo.AddRant(r);
-                _logger.LogInformation("file saved.");
-                return new OkObjectResult(r);
+                catch (Exception e)
+                {
+                    var res = new ObjectResult(e);
+                    res.StatusCode = StatusCodes.Status500InternalServerError;
+                    return res;
+                }
+                
             }
             else
             {
