@@ -21,7 +21,7 @@ namespace Titinski.WebAPI.Services.ImageRepository
             _ftpConfig = ftpConfig;
         }
         // from https://docs.microsoft.com/en-us/dotnet/framework/network-programming/how-to-upload-files-with-ftp
-        public async void AddRant(RantPost rant)
+        public void AddRant(RantPost rant)
         {
             // Get the object used to communicate with the server.
             FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_ftpConfig.Value.Address + FTP_IMAGES_DIR);
@@ -34,22 +34,11 @@ namespace Titinski.WebAPI.Services.ImageRepository
             byte[] fileContents;
             using (var ms = new System.IO.MemoryStream())
             {
-                await rant.ImageFile.CopyToAsync(ms);
+                rant.ImageFile.CopyTo(ms);
                 fileContents = ms.ToArray();
-                /*string s = Convert.ToBase64String(fileContents);
-                r = new Models.Rant
-                {
-                    Description = newPost.Description,
-                    ImageBase64 = s
-                };*/
             }
 
-            
-            /*using (StreamReader sourceStream = new StreamReader("testfile.txt"))
-            {
-                fileContents = System.Text.Encoding.UTF8.GetBytes(sourceStream.ReadToEnd());
-            }*/
-
+            request.UseBinary = true;
             request.ContentLength = fileContents.Length;
 
             using (Stream requestStream = request.GetRequestStream())
