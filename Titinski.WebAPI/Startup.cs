@@ -33,6 +33,7 @@ namespace Titinski.WebAPI
             services.AddSingleton<Services.ImageRepository.IImageRepo, Services.ImageRepository.LocalImageRepo>();
             // configurations
             services.Configure<AppSettings.SqlConfig>(Configuration.GetSection("App:Sql"));
+            services.Configure<AppSettings.FtpConfig>(Configuration.GetSection("App:Ftp"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

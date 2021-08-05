@@ -15,19 +15,15 @@ namespace Titinski.WebAPI.Controllers
     public class MainController : ControllerBase
     {
         private readonly ILogger<MainController> _logger;
-        private readonly IOptions<AppSettings.SqlConfig> _sqlConfig;
-
         private IMainHandler _mainHandler;
 
         public MainController(
             IMainHandler mainHandler,
-            ILogger<MainController> logger,
-            IOptions<AppSettings.SqlConfig> sqlConfig
+            ILogger<MainController> logger
             )
         {
             _mainHandler = mainHandler;
             _logger = logger;
-            _sqlConfig = sqlConfig;
         }
 
         [HttpGet]

@@ -10,5 +10,6 @@ namespace Titinski.WebAPI.Models
         public string ID { get; set; }
         public string Description { get; set; }
         public string ImageBase64 { get; set; }
+        public string Path { get; set; }
     }
 }
