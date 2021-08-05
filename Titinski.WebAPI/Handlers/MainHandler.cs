@@ -64,9 +64,8 @@ namespace Titinski.WebAPI.Handlers
                 }
                 catch (Exception e)
                 {
-                    var res = new ObjectResult(e);
-                    res.StatusCode = StatusCodes.Status500InternalServerError;
-                    return res;
+                    _logger.LogError(e, e.Message);
+                    throw;
                 }
                 
             }
