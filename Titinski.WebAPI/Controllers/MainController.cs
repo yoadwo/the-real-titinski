@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
 using Titinski.WebAPI.Handlers;
 
@@ -47,9 +43,9 @@ namespace Titinski.WebAPI.Controllers
             }
             catch(Exception e)
             {
+                _logger.LogError(e, e.Message);
                 return Problem(e.Message);
             }
-            
         }
     }
 }
