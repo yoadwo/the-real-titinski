@@ -24,15 +24,15 @@ namespace Titinski.WebAPI.Services.ImageRepository
         public void AddRant(RantPost rant)
         {
             // Get the object used to communicate with the server.
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(_ftpConfig.Value.Address + FTP_IMAGES_DIR + $"/{rant.ImageFile.Name}_{DateTime.Now.ToString("s")}");
+            var address = _ftpConfig.Value.Address + _ftpConfig.Value.RootPath + _ftpConfig.Value.ImagesPath;
+            var fileName = $"/{DateTime.Now.ToString("s")}.{rant.ImageFile.FileName}";
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(address + fileName);
             request.Method = WebRequestMethods.Ftp.UploadFile;
 
             // This example assumes the FTP site uses anonymous logon.
             request.Credentials = new NetworkCredential(_ftpConfig.Value.Username, _ftpConfig.Value.Password);
 
             // Copy the contents of the file to the request stream.
-            byte[] fileContents;
-            
             request.ContentLength = rant.ImageFile.Length;
 
 
@@ -44,10 +44,6 @@ namespace Titinski.WebAPI.Services.ImageRepository
 
             using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
             {
-                Stream responseStream = response.GetResponseStream();
-                StreamReader reader = new StreamReader(responseStream);
-                Console.WriteLine(reader.ReadToEnd());
-
                 Console.WriteLine($"Upload File Complete, status {response.StatusDescription}");
             }
         }
