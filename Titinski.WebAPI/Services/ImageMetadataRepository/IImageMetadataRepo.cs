@@ -4,7 +4,7 @@ namespace Titinski.WebAPI.Services.ImageMetadataRepository
 {
     public interface IImageMetadataRepo
     {
-        public void AddRant(RantPost rant);
+        public string AddRant(RantPost rant, string fileRelativePath);
         public Rant GetRant(string id);
     }
 }

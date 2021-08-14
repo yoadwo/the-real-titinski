@@ -16,7 +16,7 @@ namespace Titinski.WebAPI.Services.ImageMetadataRepository
         {
             _sqlConfig = sqlConfig;   
         }
-        public void AddRant(RantPost rant)
+        public string AddRant(RantPost rant, string fileRelativePath)
         {
             throw new NotImplementedException();
         }

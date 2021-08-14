@@ -27,7 +27,7 @@ namespace Titinski.WebAPI.Services.ImageRepository
             }
         }
 
-        public void AddRant(RantPost rant)
+        public string AddRant(RantPost rant)
         {
             var r = new Rant
             {
@@ -36,6 +36,7 @@ namespace Titinski.WebAPI.Services.ImageRepository
 
             };
             Rants.Add(r);
+            return Rants[Rants.IndexOf(r)].ToString();
         }
 
         public Rant GetRant(string id)

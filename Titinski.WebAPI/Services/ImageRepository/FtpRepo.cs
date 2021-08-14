@@ -15,6 +15,8 @@ namespace Titinski.WebAPI.Services.ImageRepository
         private readonly IOptions<AppSettings.FtpConfig> _ftpConfig;
         private readonly ILogger<FtpRepo> _logger;
 
+        private readonly string IMAGES_DIR_ABSOLUTE_PATH;
+
         public FtpRepo(
             IOptions<AppSettings.FtpConfig> ftpConfig,
             ILogger<FtpRepo> logger
@@ -22,15 +24,17 @@ namespace Titinski.WebAPI.Services.ImageRepository
         {
             _ftpConfig = ftpConfig;
             _logger = logger;
+
+            IMAGES_DIR_ABSOLUTE_PATH = _ftpConfig.Value.Address + _ftpConfig.Value.RootPath + _ftpConfig.Value.ImagesPath;
         }
         // from https://docs.microsoft.com/en-us/dotnet/framework/network-programming/how-to-upload-files-with-ftp
-        public void AddRant(RantPost rant)
+        public string AddRant(RantPost rant)
         {
-            var address = _ftpConfig.Value.Address + _ftpConfig.Value.RootPath + _ftpConfig.Value.ImagesPath;
+            
             var fileName = $"/{DateTime.Now.ToString("s")}.{rant.ImageFile.FileName}";
 
             // Get the object used to communicate with the server.
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(address + fileName);
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(IMAGES_DIR_ABSOLUTE_PATH + fileName);
             request.Method = WebRequestMethods.Ftp.UploadFile;
             _logger.LogInformation("Upload request created. File name: " + fileName);
 
@@ -47,7 +51,7 @@ namespace Titinski.WebAPI.Services.ImageRepository
                     rant.ImageFile.CopyTo(requestStream);
                 }
             }
-            catch (System.Net.WebException e)
+            catch (WebException e)
             {
                 if (e.Response is FtpWebResponse)
                 {
@@ -61,6 +65,8 @@ namespace Titinski.WebAPI.Services.ImageRepository
             {
                 _logger.LogInformation($"Upload File Complete, status description: '{response.StatusDescription}'");
             }
+
+            return fileName;
         }
 
         public Rant GetRant(string id)

@@ -48,12 +48,18 @@ namespace Titinski.WebAPI.Handlers
         public async Task<IActionResult> OnPostUploadAsync(Models.RantPost newPost)
         {
             _logger.LogInformation($"New RantPost received");
-            Models.Rant r = new Models.Rant();
 
             if (newPost.ImageFile.Length > 0)
             {
-                _imageRepo.AddRant(newPost);
-                _imageMetadataRepo.AddRant(newPost);
+                var fileRelativePath = _imageRepo.AddRant(newPost);
+                string id = _imageMetadataRepo.AddRant(newPost, fileRelativePath);
+
+                Models.Rant r = new Models.Rant()
+                {
+                    ID = id,
+                    Description = newPost.Description,
+                    Path = fileRelativePath
+                }; ;
 
                 _logger.LogInformation("Rant saved to image Repo and imageMetadata Repo.");
                 return new OkObjectResult(r);
