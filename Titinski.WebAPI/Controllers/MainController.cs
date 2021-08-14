@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
+using System;
 using System.Threading.Tasks;
 using Titinski.WebAPI.Handlers;
 
@@ -40,7 +37,15 @@ namespace Titinski.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> SubmitForm([FromForm] Models.RantPost newPost)
         {
-            return await _mainHandler.OnPostUploadAsync(newPost);
+            try
+            {
+                return await _mainHandler.OnPostUploadAsync(newPost);
+            }
+            catch(Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return Problem(e.Message);
+            }
         }
     }
 }

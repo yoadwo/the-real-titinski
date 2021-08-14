@@ -7,24 +7,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Titinski.WebAPI.Services.ImageRepository;
+using Titinski.WebAPI.Services.ImageMetadataRepository;
 
 namespace Titinski.WebAPI.Handlers
 {
     public class MainHandler : IMainHandler
     {
         private readonly ILogger<MainHandler> _logger;
-        private readonly IOptions<AppSettings.SqlConfig> _sqlConfig;
         private readonly IImageRepo _imageRepo;
+        private readonly IImageMetadataRepo _imageMetadataRepo;
         private readonly Random _rnd;
 
         public MainHandler(
-            ILogger<MainHandler> logger,,
-            IOptions<AppSettings.SqlConfig> sqlConfig,
-            IImageRepo imageRepo
+            ILogger<MainHandler> logger,
+            IImageRepo imageRepo,
+            IImageMetadataRepo metadataRepo
             )
         {
             _logger = logger;
             _imageRepo = imageRepo;
+            _imageMetadataRepo = metadataRepo;
 
             _rnd = new Random();
         }
@@ -45,25 +47,21 @@ namespace Titinski.WebAPI.Handlers
 
         public async Task<IActionResult> OnPostUploadAsync(Models.RantPost newPost)
         {
-            _logger.LogInformation($"descrption: {newPost.Description}");
-            _logger.LogInformation($"saving file :{newPost.ImageFile.FileName}");
-            Models.Rant r;
+            _logger.LogInformation($"New RantPost received");
 
             if (newPost.ImageFile.Length > 0)
             {
-                using (var ms = new System.IO.MemoryStream())
+                var fileRelativePath = _imageRepo.AddRant(newPost);
+                string id = _imageMetadataRepo.AddRant(newPost, fileRelativePath);
+
+                Models.Rant r = new Models.Rant()
                 {
-                    await newPost.ImageFile.CopyToAsync(ms);
-                    var fileBytes = ms.ToArray();
-                    string s = Convert.ToBase64String(fileBytes);
-                    r = new Models.Rant
-                    {
-                        Description = newPost.Description,
-                        ImageBase64 = s
-                    };
-                }
-                _imageRepo.AddRant(r);
-                _logger.LogInformation("file saved.");
+                    ID = id,
+                    Description = newPost.Description,
+                    Path = fileRelativePath
+                }; ;
+
+                _logger.LogInformation("Rant saved to image Repo and imageMetadata Repo.");
                 return new OkObjectResult(r);
             }
             else
