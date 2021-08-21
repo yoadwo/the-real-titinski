@@ -19,7 +19,6 @@ namespace Titinski.WebAPI.Services.ImageRepository
                 var r = new Rant
                 {
                     ID = count.ToString(),
-                    ImageBase64 = Convert.ToBase64String(imageBytes),
                     Description = new System.IO.FileInfo(file).Name
                 };
                 Rants.Add(r);

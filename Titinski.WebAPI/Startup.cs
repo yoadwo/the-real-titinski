@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -30,11 +31,11 @@ namespace Titinski.WebAPI
             // handlers
             services.AddScoped<Handlers.IMainHandler, Handlers.MainHandler>();
             // services
-            services.AddSingleton<Services.ImageMetadataRepository.IImageMetadataRepo, Services.ImageMetadataRepository.SqlRepo>();
+            services.AddScoped<Services.ImageMetadataRepository.IImageMetadataRepo, Services.ImageMetadataRepository.SqlRepo>();
             services.AddSingleton<Services.ImageRepository.IImageRepo, Services.ImageRepository.FtpRepo>();
             // configurations
-            services.Configure<AppSettings.SqlConfig>(Configuration.GetSection("App:Sql"));
             services.Configure<AppSettings.FtpConfig>(Configuration.GetSection("App:Ftp"));
+            ConfigureEFCore(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -65,6 +66,27 @@ namespace Titinski.WebAPI
             {
                 endpoints.MapControllers();
             });
+        }
+
+        public void ConfigureEFCore(IServiceCollection services)
+        {
+            services.Configure<AppSettings.SqlConfig>(Configuration.GetSection("App:Sql"));
+            var sqlConfig = Configuration.GetSection("App:Sql").Get<AppSettings.SqlConfig>();
+            var connectionString = $"server={sqlConfig.Address};user={sqlConfig.Username};password={sqlConfig.Password};database={sqlConfig.DbName}";
+
+            // Replace with your server version and type.
+            // Use 'MariaDbServerVersion' for MariaDB.
+            // Alternatively, use 'ServerVersion.AutoDetect(connectionString)'.
+            // For common usages, see pull request #1233.
+            var serverVersion = new Microsoft.EntityFrameworkCore.MariaDbServerVersion(new Version(10, 4));
+
+            // Replace 'YourDbContext' with the name of your own DbContext derived class.
+            services.AddDbContext<Models.ImageRepoDbContext>(
+                dbContextOptions => dbContextOptions
+                    .UseMySql(connectionString, serverVersion)
+                    .EnableSensitiveDataLogging() // <-- These two calls are optional but help
+                    .EnableDetailedErrors()       // <-- with debugging (remove for production).
+            );
         }
     }
 }

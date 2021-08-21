@@ -16,7 +16,6 @@ namespace Titinski.WebAPI.Handlers
         private readonly ILogger<MainHandler> _logger;
         private readonly IImageRepo _imageRepo;
         private readonly IImageMetadataRepo _imageMetadataRepo;
-        private readonly Random _rnd;
 
         public MainHandler(
             ILogger<MainHandler> logger,
@@ -27,13 +26,12 @@ namespace Titinski.WebAPI.Handlers
             _logger = logger;
             _imageRepo = imageRepo;
             _imageMetadataRepo = metadataRepo;
-
-            _rnd = new Random();
         }
 
         public async System.Threading.Tasks.Task<IActionResult> GetRantAsync(string id)
         {
-            var savedRant = _imageRepo.GetRant(id);
+            //var savedRant = _imageRepo.GetRant(id);
+            var savedRant = await _imageMetadataRepo.GetRantAsync(id);
             if (savedRant != null)
             {
                 return new OkObjectResult(savedRant);
@@ -59,7 +57,7 @@ namespace Titinski.WebAPI.Handlers
                     ID = id,
                     Description = newPost.Description,
                     Path = fileRelativePath
-                }; ;
+                };
 
                 _logger.LogInformation("Rant saved to image Repo and imageMetadata Repo.");
                 return new OkObjectResult(r);

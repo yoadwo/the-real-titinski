@@ -9,7 +9,12 @@ namespace Titinski.WebAPI.Models
 {
     public class RantPost
     {
-        [Required] public string Description { get; set; }
-        [Required] public IFormFile ImageFile { get; set; }
+        [Required]
+        [StringLength(maximumLength: 250)]
+        [RegularExpression(@"^[A-Za-z0-9\s\-\.\,]{0,250}$")]
+        public string Description { get; set; }
+
+        [Required] 
+        public IFormFile ImageFile { get; set; }
     }
 }

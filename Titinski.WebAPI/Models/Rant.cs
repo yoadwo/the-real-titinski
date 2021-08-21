@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Titinski.WebAPI.Models
 {
-    public class Rant
+    [Table("Rants")]
+    public class Rant : IEntity
     {
         public string ID { get; set; }
         public string Description { get; set; }
-        public string ImageBase64 { get; set; }
         public string Path { get; set; }
     }
 }
