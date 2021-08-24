@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Titinski.WebAPI.Models
 {
-    [Table("Rants")]
+    [Table("rants")]
     public class Rant : IEntity
     {
         public string ID { get; set; }
