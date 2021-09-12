@@ -12,7 +12,7 @@ namespace Titinski.WebAPI.Controllers
     public class MainController : ControllerBase
     {
         private readonly ILogger<MainController> _logger;
-        private IMainHandler _mainHandler;
+        private readonly IMainHandler _mainHandler;
 
         public MainController(
             IMainHandler mainHandler,
@@ -30,7 +30,16 @@ namespace Titinski.WebAPI.Controllers
         public async Task<IActionResult> GetRantAsync(string id)
         {
             return await _mainHandler.GetRantAsync(id);
-        }        
+        }
+
+        [HttpGet]
+        [Route("rant")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> GetAllRantsAsync()
+        {
+            return await _mainHandler.GetAllRantsAsync();
+        }
 
         [HttpPost("rantForm")]
         [ProducesResponseType(StatusCodes.Status201Created)]
