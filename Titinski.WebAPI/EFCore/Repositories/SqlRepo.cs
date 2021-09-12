@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 using Titinski.WebAPI.Interfaces.Repositories.ImageMetadataRepository;
 using Titinski.WebAPI.Models;
 
@@ -6,11 +7,14 @@ namespace Titinski.WebAPI.EFCore.Repositories
 {
     public class SqlRepo : GenericRepository<Rant>, IImageMetadataRepository
     {
+        private readonly ILogger<SqlRepo> _logger;
+
         public SqlRepo(
-            ImageRepoDbContext imageRepoDbContext
-            ):base(imageRepoDbContext)
+                ImageRepoDbContext imageRepoDbContext,
+                ILogger<SqlRepo> logger
+            ) :base(imageRepoDbContext)
         {
-            //_imageRepoDbContext = imageRepoDbContext;
+            _logger = logger;
         }
         public Task<Rant> AddRantAsync(RantPost rant, string fileRelativePath)
         {
@@ -22,12 +26,6 @@ namespace Titinski.WebAPI.EFCore.Repositories
             };
 
             return AddAsync(r);
-        }
-
-        public async Task<Rant> GetRantAsync(string id)
-        {
-            var r = await _context.FindAsync<Models.Rant>(id);
-            return r;
         }
     }
 }

@@ -18,7 +18,6 @@ namespace Titinski.WebAPI.EFCore.Repositories
 
         public async Task<IEnumerable<T>> GetAllAsync()
         {
-            // may not working, using using Microsoft.EntityFrameworkCore and the mysql-specific
             return await _context.Set<T>().ToListAsync();
         }
 
