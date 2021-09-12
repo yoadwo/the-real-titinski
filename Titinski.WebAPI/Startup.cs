@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Titinski.WebAPI.Interfaces.Repositories.ImageMetadataRepository;
 
 namespace Titinski.WebAPI
 {
@@ -31,11 +32,12 @@ namespace Titinski.WebAPI
             // handlers
             services.AddScoped<Handlers.IMainHandler, Handlers.MainHandler>();
             // services
-            services.AddScoped<Services.ImageMetadataRepository.IImageMetadataRepo, Services.ImageMetadataRepository.SqlRepo>();
+            services.AddScoped<IImageMetadataRepository, EFCore.Repositories.SqlRepo>();
             services.AddSingleton<Services.ImageRepository.IImageRepo, Services.ImageRepository.FtpRepo>();
             // configurations
             services.Configure<AppSettings.FtpConfig>(Configuration.GetSection("App:Ftp"));
             ConfigureEFCore(services);
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -70,18 +72,14 @@ namespace Titinski.WebAPI
 
         public void ConfigureEFCore(IServiceCollection services)
         {
-            services.Configure<AppSettings.SqlConfig>(Configuration.GetSection("App:Sql"));
+            //services.Configure<AppSettings.SqlConfig>(Configuration.GetSection("App:Sql"));
             var sqlConfig = Configuration.GetSection("App:Sql").Get<AppSettings.SqlConfig>();
             var connectionString = $"server={sqlConfig.Address};user={sqlConfig.Username};password={sqlConfig.Password};database={sqlConfig.DbName}";
 
-            // Replace with your server version and type.
-            // Use 'MariaDbServerVersion' for MariaDB.
-            // Alternatively, use 'ServerVersion.AutoDetect(connectionString)'.
-            // For common usages, see pull request #1233.
-            var serverVersion = new Microsoft.EntityFrameworkCore.MariaDbServerVersion(new Version(10, 4));
+            var serverVersion = new MariaDbServerVersion(new Version(10, 4));
 
             // Replace 'YourDbContext' with the name of your own DbContext derived class.
-            services.AddDbContext<Models.ImageRepoDbContext>(
+            services.AddDbContext<EFCore.ImageRepoDbContext>(
                 dbContextOptions => dbContextOptions
                     .UseMySql(connectionString, serverVersion)
                     .EnableSensitiveDataLogging() // <-- These two calls are optional but help

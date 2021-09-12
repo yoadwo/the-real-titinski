@@ -1,13 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using Titinski.WebAPI.Interfaces.Repositories.ImageMetadataRepository;
 using Titinski.WebAPI.Services.ImageRepository;
-using Titinski.WebAPI.Services.ImageMetadataRepository;
 
 namespace Titinski.WebAPI.Handlers
 {
@@ -15,12 +11,12 @@ namespace Titinski.WebAPI.Handlers
     {
         private readonly ILogger<MainHandler> _logger;
         private readonly IImageRepo _imageRepo;
-        private readonly IImageMetadataRepo _imageMetadataRepo;
+        private readonly IImageMetadataRepository _imageMetadataRepo;
 
         public MainHandler(
             ILogger<MainHandler> logger,
             IImageRepo imageRepo,
-            IImageMetadataRepo metadataRepo
+            IImageMetadataRepository metadataRepo            
             )
         {
             _logger = logger;
@@ -30,8 +26,7 @@ namespace Titinski.WebAPI.Handlers
 
         public async System.Threading.Tasks.Task<IActionResult> GetRantAsync(string id)
         {
-            //var savedRant = _imageRepo.GetRant(id);
-            var savedRant = await _imageMetadataRepo.GetRantAsync(id);
+            var savedRant = await _imageMetadataRepo.GetAsync(id);
             if (savedRant != null)
             {
                 return new OkObjectResult(savedRant);
@@ -49,15 +44,9 @@ namespace Titinski.WebAPI.Handlers
 
             if (newPost.ImageFile.Length > 0)
             {
-                var fileRelativePath = _imageRepo.AddRant(newPost);
-                string id = _imageMetadataRepo.AddRant(newPost, fileRelativePath);
 
-                Models.Rant r = new Models.Rant()
-                {
-                    ID = id,
-                    Description = newPost.Description,
-                    Path = fileRelativePath
-                };
+                var fileRelativePath = _imageRepo.AddRant(newPost);
+                Models.Rant r = await _imageMetadataRepo.AddRantAsync(newPost, fileRelativePath);
 
                 _logger.LogInformation("Rant saved to image Repo and imageMetadata Repo.");
                 return new OkObjectResult(r);

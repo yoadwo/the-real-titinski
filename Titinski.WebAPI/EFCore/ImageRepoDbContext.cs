@@ -4,14 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Titinski.WebAPI.Models
+namespace Titinski.WebAPI.EFCore
 {
     public class ImageRepoDbContext : DbContext
     {
         public ImageRepoDbContext(DbContextOptions<ImageRepoDbContext> options)
             :base(options)
         {
-
         }
 
         public DbSet<Models.Rant> Rants { get; set; }

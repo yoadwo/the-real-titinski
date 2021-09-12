@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Titinski.WebAPI.Models
 {
-    interface IEntity
+    public interface IEntity
     {
         string ID { get; set; }
     }
