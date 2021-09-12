@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Titinski.WebAPI.Interfaces.Storage;
 using Titinski.WebAPI.Models;
 
-namespace Titinski.WebAPI.Services.ImageRepository
+namespace Titinski.WebAPI.Services.ImageStorage
 {
-    public class LocalImageRepo : IImageRepo
+    public class LocalImageStorage : IImageStorage
     {
         private List<Rant> Rants;
-        public LocalImageRepo()
+        public LocalImageStorage()
         {
             Rants = new List<Rant>();
             var count = 0;
@@ -19,7 +20,6 @@ namespace Titinski.WebAPI.Services.ImageRepository
                 var r = new Rant
                 {
                     ID = count.ToString(),
-                    ImageBase64 = Convert.ToBase64String(imageBytes),
                     Description = new System.IO.FileInfo(file).Name
                 };
                 Rants.Add(r);

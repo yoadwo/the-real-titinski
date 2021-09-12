@@ -1,48 +1,57 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Titinski.WebAPI.Services.ImageRepository;
-using Titinski.WebAPI.Services.ImageMetadataRepository;
+using Titinski.WebAPI.Interfaces.Repositories.ImageMetadataRepository;
+using Titinski.WebAPI.Interfaces.Storage;
 
 namespace Titinski.WebAPI.Handlers
 {
     public class MainHandler : IMainHandler
     {
         private readonly ILogger<MainHandler> _logger;
-        private readonly IImageRepo _imageRepo;
-        private readonly IImageMetadataRepo _imageMetadataRepo;
-        private readonly Random _rnd;
+        private readonly IImageStorage _imageStorage;
+        private readonly IImageMetadataRepository _imageMetadataRepo;
 
         public MainHandler(
             ILogger<MainHandler> logger,
-            IImageRepo imageRepo,
-            IImageMetadataRepo metadataRepo
+            IImageStorage imageStorage,
+            IImageMetadataRepository metadataRepo            
             )
         {
             _logger = logger;
-            _imageRepo = imageRepo;
+            _imageStorage = imageStorage;
             _imageMetadataRepo = metadataRepo;
-
-            _rnd = new Random();
         }
 
-        public async System.Threading.Tasks.Task<IActionResult> GetRantAsync(string id)
+        public async Task<IActionResult> GetRantAsync(string id)
         {
-            var savedRant = _imageRepo.GetRant(id);
+            var savedRant = await _imageMetadataRepo.GetAsync(id);
             if (savedRant != null)
             {
                 return new OkObjectResult(savedRant);
             }
             else
             {
+                _logger.LogInformation("No data exists for id {0}", id);
                 return new NoContentResult();
             }
             
+        }
+
+        public async Task<IActionResult> GetAllRantsAsync()
+        {
+            var rants = await _imageMetadataRepo.GetAllAsync();
+            if (rants != null)
+            {
+                return new OkObjectResult(rants);
+            }
+            else
+            {
+                _logger.LogInformation("No data was found in the DB");
+                return new NoContentResult();
+            }
+
         }
 
         public async Task<IActionResult> OnPostUploadAsync(Models.RantPost newPost)
@@ -51,15 +60,9 @@ namespace Titinski.WebAPI.Handlers
 
             if (newPost.ImageFile.Length > 0)
             {
-                var fileRelativePath = _imageRepo.AddRant(newPost);
-                string id = _imageMetadataRepo.AddRant(newPost, fileRelativePath);
 
-                Models.Rant r = new Models.Rant()
-                {
-                    ID = id,
-                    Description = newPost.Description,
-                    Path = fileRelativePath
-                }; ;
+                var fileRelativePath = _imageStorage.AddRant(newPost);
+                Models.Rant r = await _imageMetadataRepo.AddRantAsync(newPost, fileRelativePath);
 
                 _logger.LogInformation("Rant saved to image Repo and imageMetadata Repo.");
                 return new OkObjectResult(r);
