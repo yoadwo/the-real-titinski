@@ -1,17 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Titinski.WebAPI.Interfaces.Repositories.ImageMetadataRepository;
+using Titinski.WebAPI.Interfaces.Storage;
 
 namespace Titinski.WebAPI
 {
@@ -33,7 +28,7 @@ namespace Titinski.WebAPI
             services.AddScoped<Handlers.IMainHandler, Handlers.MainHandler>();
             // services
             services.AddScoped<IImageMetadataRepository, EFCore.Repositories.SqlRepo>();
-            services.AddSingleton<Services.ImageRepository.IImageRepo, Services.ImageRepository.FtpRepo>();
+            services.AddSingleton<IImageStorage, Services.ImageStorage.FtpStorage>();
             // configurations
             services.Configure<AppSettings.FtpConfig>(Configuration.GetSection("App:Ftp"));
             ConfigureEFCore(services);
@@ -72,7 +67,6 @@ namespace Titinski.WebAPI
 
         public void ConfigureEFCore(IServiceCollection services)
         {
-            //services.Configure<AppSettings.SqlConfig>(Configuration.GetSection("App:Sql"));
             var sqlConfig = Configuration.GetSection("App:Sql").Get<AppSettings.SqlConfig>();
             var connectionString = $"server={sqlConfig.Address};user={sqlConfig.Username};password={sqlConfig.Password};database={sqlConfig.DbName}";
 

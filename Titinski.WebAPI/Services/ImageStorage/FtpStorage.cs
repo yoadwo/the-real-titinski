@@ -1,25 +1,23 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
+using Titinski.WebAPI.Interfaces.Storage;
 using Titinski.WebAPI.Models;
 
-namespace Titinski.WebAPI.Services.ImageRepository
+namespace Titinski.WebAPI.Services.ImageStorage
 {
-    public class FtpRepo : IImageRepo
+    public class FtpStorage : IImageStorage
     {
         private readonly IOptions<AppSettings.FtpConfig> _ftpConfig;
-        private readonly ILogger<FtpRepo> _logger;
+        private readonly ILogger<FtpStorage> _logger;
 
         private readonly string IMAGES_DIR_ABSOLUTE_PATH;
 
-        public FtpRepo(
+        public FtpStorage(
             IOptions<AppSettings.FtpConfig> ftpConfig,
-            ILogger<FtpRepo> logger
+            ILogger<FtpStorage> logger
             )
         {
             _ftpConfig = ftpConfig;
@@ -69,7 +67,7 @@ namespace Titinski.WebAPI.Services.ImageRepository
             return fileName;
         }
 
-        public Rant GetRant(string id)
+        public Rant GetRant(string path)
         {
             throw new NotImplementedException();
         }
