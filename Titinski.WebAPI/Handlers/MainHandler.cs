@@ -66,7 +66,7 @@ namespace Titinski.WebAPI.Handlers
                 Models.Rant r = _unitOfWork.ImageMetaDataRepo.AddRant(newPost, fileRelativePath);
                 await _unitOfWork.CompleteAsync();
 
-                _logger.LogInformation("Rant saved to image Repo and imageMetadata Repo.");
+                _logger.LogInformation("Rant saved to image storage and imageMetadata Repo.");
                 return new OkObjectResult(r);
             }
             else

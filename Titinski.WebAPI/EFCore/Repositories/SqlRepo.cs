@@ -24,7 +24,6 @@ namespace Titinski.WebAPI.EFCore.Repositories
                 Description = rant.Description,
                 Path = fileRelativePath
             };
-
             return Add(r);
         }
     }

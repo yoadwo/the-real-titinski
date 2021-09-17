@@ -14,8 +14,8 @@ namespace Titinski.WebAPI.Interfaces.Repositories
         // find() must receive object[]: params, not  expressionFunc:expression
         //Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> expression);
         T Add(T entity);
-        Task<T> UpdateAsync(T entity);
-        Task<T> DeleteAsync(T entity);
+        T Update(T entity);
+        T Delete(T entity);
 
         //void AddRange(IEnumerable<T> entities);        
         //void RemoveRange(IEnumerable<T> entities);
