@@ -10,8 +10,8 @@ namespace Titinski.WebAPI.EFCore.Repositories
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class, Models.IEntity
     {
-        protected readonly ImageRepoDbContext _context;
-        public GenericRepository(ImageRepoDbContext context)
+        protected readonly ImagesDbContext _context;
+        public GenericRepository(ImagesDbContext context)
         {
             _context = context;
         }
@@ -26,11 +26,11 @@ namespace Titinski.WebAPI.EFCore.Repositories
             return await _context.Set<T>().FindAsync(id);
         }
         
-        public async Task<T> AddAsync(T entity)
+        public T Add(T entity)
         {
             _context.Set<T>().Add(entity);
             // should move to UnitOfWork
-            await _context.SaveChangesAsync();
+            //await _context.SaveChangesAsync();
             return entity;
         }
 

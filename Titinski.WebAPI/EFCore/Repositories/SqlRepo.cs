@@ -10,13 +10,13 @@ namespace Titinski.WebAPI.EFCore.Repositories
         private readonly ILogger<SqlRepo> _logger;
 
         public SqlRepo(
-                ImageRepoDbContext imageRepoDbContext,
+                ImagesDbContext imageRepoDbContext,
                 ILogger<SqlRepo> logger
             ) :base(imageRepoDbContext)
         {
             _logger = logger;
         }
-        public Task<Rant> AddRantAsync(RantPost rant, string fileRelativePath)
+        public Rant AddRant(RantPost rant, string fileRelativePath)
         {
             var r = new Rant()
             {
@@ -25,7 +25,7 @@ namespace Titinski.WebAPI.EFCore.Repositories
                 Path = fileRelativePath
             };
 
-            return AddAsync(r);
+            return Add(r);
         }
     }
 }

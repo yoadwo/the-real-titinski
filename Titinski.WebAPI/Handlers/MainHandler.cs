@@ -4,6 +4,7 @@ using System;
 using System.Threading.Tasks;
 using Titinski.WebAPI.Interfaces.Repositories.ImageMetadataRepository;
 using Titinski.WebAPI.Interfaces.Storage;
+using Titinski.WebAPI.Interfaces.UnitOfWork;
 
 namespace Titinski.WebAPI.Handlers
 {
@@ -11,22 +12,22 @@ namespace Titinski.WebAPI.Handlers
     {
         private readonly ILogger<MainHandler> _logger;
         private readonly IImageStorage _imageStorage;
-        private readonly IImageMetadataRepository _imageMetadataRepo;
+        private readonly IUnitOfWork _unitOfWork;
 
         public MainHandler(
             ILogger<MainHandler> logger,
             IImageStorage imageStorage,
-            IImageMetadataRepository metadataRepo            
+            IUnitOfWork unitOfWork
             )
         {
             _logger = logger;
             _imageStorage = imageStorage;
-            _imageMetadataRepo = metadataRepo;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<IActionResult> GetRantAsync(string id)
         {
-            var savedRant = await _imageMetadataRepo.GetAsync(id);
+            var savedRant = await _unitOfWork.ImageMetaDataRepo.GetAsync(id);
             if (savedRant != null)
             {
                 return new OkObjectResult(savedRant);
@@ -41,7 +42,7 @@ namespace Titinski.WebAPI.Handlers
 
         public async Task<IActionResult> GetAllRantsAsync()
         {
-            var rants = await _imageMetadataRepo.GetAllAsync();
+            var rants = await _unitOfWork.ImageMetaDataRepo.GetAllAsync();
             if (rants != null)
             {
                 return new OkObjectResult(rants);
@@ -62,7 +63,8 @@ namespace Titinski.WebAPI.Handlers
             {
 
                 var fileRelativePath = _imageStorage.AddRant(newPost);
-                Models.Rant r = await _imageMetadataRepo.AddRantAsync(newPost, fileRelativePath);
+                Models.Rant r = _unitOfWork.ImageMetaDataRepo.AddRant(newPost, fileRelativePath);
+                await _unitOfWork.CompleteAsync();
 
                 _logger.LogInformation("Rant saved to image Repo and imageMetadata Repo.");
                 return new OkObjectResult(r);
