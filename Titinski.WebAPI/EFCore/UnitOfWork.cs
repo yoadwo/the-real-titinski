@@ -14,10 +14,10 @@ namespace Titinski.WebAPI.EFCore
         private readonly ImagesDbContext _context;
         public IImageMetadataRepository ImageMetaDataRepo { get; private set; }
 
-        public UnitOfWork(ImagesDbContext context, ILoggerFactory loggerFactory)
+        public UnitOfWork(ImagesDbContext context, IImageMetadataRepository imageMetaDataRepo)
         {
             _context = context;
-            ImageMetaDataRepo = new EFCore.Repositories.SqlRepo(context, loggerFactory.CreateLogger<SqlRepo>());
+            ImageMetaDataRepo = imageMetaDataRepo;
         }
 
         public Task CompleteAsync()
