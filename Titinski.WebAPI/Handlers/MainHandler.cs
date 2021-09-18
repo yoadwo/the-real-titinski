@@ -59,22 +59,18 @@ namespace Titinski.WebAPI.Handlers
         {
             _logger.LogInformation($"New RantPost received");
 
-            if (newPost.ImageFile.Length > 0)
-            {
-
-                var fileRelativePath = _imageStorage.AddRant(newPost);
-                Models.Rant r = _unitOfWork.ImageMetaDataRepo.AddRant(newPost, fileRelativePath);
-                await _unitOfWork.CompleteAsync();
-
-                _logger.LogInformation("Rant saved to image storage and imageMetadata Repo.");
-                return new OkObjectResult(r);
-            }
-            else
+            if (newPost.ImageFile.Length == 0)
             {
                 return new BadRequestObjectResult(new ArgumentException("Empty file"));
             }
 
-            
+            // TODO: add rollback for FTP
+            var fileRelativePath = _imageStorage.SaveRant(newPost);
+            Models.Rant r = _unitOfWork.ImageMetaDataRepo.AddRant(newPost, fileRelativePath);
+            await _unitOfWork.CompleteAsync();
+
+            _logger.LogInformation("Rant saved to image storage and imageMetadata Repo.");
+            return new OkObjectResult(r);
         }
     }
 }

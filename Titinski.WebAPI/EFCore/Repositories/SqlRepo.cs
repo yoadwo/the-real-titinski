@@ -10,17 +10,19 @@ namespace Titinski.WebAPI.EFCore.Repositories
         private readonly ILogger<SqlRepo> _logger;
 
         public SqlRepo(
-                ImagesDbContext imageRepoDbContext,
+                ImagesDbContext imagesDbContext,
                 ILogger<SqlRepo> logger
-            ) :base(imageRepoDbContext)
+            ) :base(imagesDbContext)
         {
             _logger = logger;
         }
+
         public Rant AddRant(RantPost rant, string fileRelativePath)
         {
             var r = new Rant()
             {
-                ID = rant.GetHashCode().ToString(),
+                // file relative path includes a timestamp so that should make ID unique enough
+                ID = fileRelativePath.GetHashCode().ToString(),
                 Description = rant.Description,
                 Path = fileRelativePath
             };

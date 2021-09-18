@@ -25,8 +25,9 @@ namespace Titinski.WebAPI.Services.ImageStorage
 
             IMAGES_DIR_ABSOLUTE_PATH = _ftpConfig.Value.Address + _ftpConfig.Value.RootPath + _ftpConfig.Value.ImagesPath;
         }
+        
         // from https://docs.microsoft.com/en-us/dotnet/framework/network-programming/how-to-upload-files-with-ftp
-        public string AddRant(RantPost rant)
+        public string SaveRant(RantPost rant)
         {
             
             var fileName = $"/{DateTime.Now.ToString("s")}.{rant.ImageFile.FileName}";
@@ -55,8 +56,12 @@ namespace Titinski.WebAPI.Services.ImageStorage
                 {
                     _logger.LogError(e, (e.Response as FtpWebResponse).StatusDescription);
                 }
+                else
+                {
+                    _logger.LogError(e, e.Message);
+                }
                 throw;
-            }
+            }            
             
 
             using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())

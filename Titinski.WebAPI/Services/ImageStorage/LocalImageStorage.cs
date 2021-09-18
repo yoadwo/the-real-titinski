@@ -27,7 +27,7 @@ namespace Titinski.WebAPI.Services.ImageStorage
             }
         }
 
-        public string AddRant(RantPost rant)
+        public string SaveRant(RantPost rant)
         {
             var r = new Rant
             {
