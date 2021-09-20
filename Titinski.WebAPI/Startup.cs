@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using Titinski.WebAPI.Interfaces.Repositories.ImageMetadataRepository;
 using Titinski.WebAPI.Interfaces.Storage;
+using Titinski.WebAPI.Interfaces.UnitOfWork;
 
 namespace Titinski.WebAPI
 {
@@ -28,7 +29,8 @@ namespace Titinski.WebAPI
             services.AddScoped<Handlers.IMainHandler, Handlers.MainHandler>();
             // services
             services.AddScoped<IImageMetadataRepository, EFCore.Repositories.SqlRepo>();
-            services.AddSingleton<IImageStorage, Services.ImageStorage.FtpStorage>();
+            services.AddScoped<IImageStorage, Services.ImageStorage.FtpStorage>();
+            services.AddScoped<IUnitOfWork, EFCore.UnitOfWork>();
             // configurations
             services.Configure<AppSettings.FtpConfig>(Configuration.GetSection("App:Ftp"));
             ConfigureEFCore(services);
@@ -73,7 +75,7 @@ namespace Titinski.WebAPI
             var serverVersion = new MariaDbServerVersion(new Version(10, 4));
 
             // Replace 'YourDbContext' with the name of your own DbContext derived class.
-            services.AddDbContext<EFCore.ImageRepoDbContext>(
+            services.AddDbContext<EFCore.ImagesDbContext>(
                 dbContextOptions => dbContextOptions
                     .UseMySql(connectionString, serverVersion)
                     .EnableSensitiveDataLogging() // <-- These two calls are optional but help

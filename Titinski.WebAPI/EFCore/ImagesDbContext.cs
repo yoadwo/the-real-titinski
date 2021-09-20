@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Titinski.WebAPI.EFCore
 {
-    public class ImageRepoDbContext : DbContext
+    public class ImagesDbContext : DbContext
     {
-        public ImageRepoDbContext(DbContextOptions<ImageRepoDbContext> options)
+        public ImagesDbContext(DbContextOptions<ImagesDbContext> options)
             :base(options)
         {
         }
