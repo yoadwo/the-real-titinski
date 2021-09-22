@@ -45,6 +45,8 @@ enum Direction {
     ]),
   ],
 })
+
+// https://stackblitz.com/edit/sticky-header-angular
 export class StickyHeaderComponent implements AfterViewInit {
   private isVisible = true;
 
