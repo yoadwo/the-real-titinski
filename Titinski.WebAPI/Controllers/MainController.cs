@@ -41,7 +41,7 @@ namespace Titinski.WebAPI.Controllers
             return await _mainHandler.GetAllRantsAsync();
         }
 
-        [HttpPost("rantForm")]
+        [HttpPost("rant")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> SubmitForm([FromForm] Models.RantPost newPost)
