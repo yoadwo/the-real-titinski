@@ -1,32 +1,27 @@
 p {
-    font-family: Lato;
-  }
+  font-family: Lato;
+}
 
-  .content {
-    padding-top: 75px;
-  }
-  
-  .rant {
-    height: 50vh;
-  }
-  
-  .rant:nth-child(odd) {
-    background-color: rgba(0, 0, 0, 0.1);
-  }
-  
-  .rant:nth-child(even) {
-    background-color: rgba(0, 0, 0, 0.05);
-  }
+.content {
+  padding-top: 75px;
+}
 
-  app-sticky-header {
-    z-index: 1000;
-    color: white;
-    background-color: #ab47bc;
-    font-size: 2rem;
-    height: 75px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-  }
-  
+.rants-list:nth-child(odd) {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.rants-list:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+app-sticky-header {
+  z-index: 1000;
+  color: white;
+  background-color: #ab47bc;
+  font-size: 2rem;
+  height: 75px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}

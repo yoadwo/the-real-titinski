@@ -1,8 +1,6 @@
 <app-sticky-header>The Real Titinski</app-sticky-header>
 <div class="content">
-  <div class="rant" *ngFor="let rant of rants">
-    <p>{{rant.id}}</p>
-    <p>{{rant.description}}</p>
-    <p>{{rant.path}}</p>
-  </div>
+  <div *ngFor="let rant of rants" class="rants-list">
+    <app-rant-detail [rantDetail]="rant"></app-rant-detail>
+  </div>  
 </div>
