@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Rant } from './models/rant';
-import { HttpService } from './services/httpService/http.service';
+import { RantHttpService } from './services/rantHttpService/rant-http.service';
 
 @Component({
   selector: 'app-root',
@@ -11,16 +11,15 @@ export class AppComponent implements OnInit {
   @Input() name: string = '';
   
   title = 'Titinski-Client';
-  //pages = new Array(10);
   rants: Rant[];
   
-  constructor(protected httpService : HttpService) {
+  constructor(private rantHttpService : RantHttpService) {
     this.rants = [];
   }
 
   ngOnInit(): void {
-    this.httpService.list().subscribe((res:Rant[]) => {
-      this.rants = res;
+    this.rantHttpService.list().subscribe((data: Rant[]) => {
+      this.rants = data;
     });
   }
 
