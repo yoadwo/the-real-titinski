@@ -35,7 +35,7 @@ namespace Titinski.WebAPI.Services.ImageStorage
             // Get the object used to communicate with the server.
             FtpWebRequest request = (FtpWebRequest)WebRequest.Create(IMAGES_DIR_ABSOLUTE_PATH + fileName);
             request.Method = WebRequestMethods.Ftp.UploadFile;
-            _logger.LogInformation("Upload request created. File name: " + fileName);
+            _logger.LogDebug("Upload request created. File name: " + fileName);
 
             // This example assumes the FTP site uses anonymous logon.
             request.Credentials = new NetworkCredential(_ftpConfig.Value.Username, _ftpConfig.Value.Password);
@@ -48,6 +48,7 @@ namespace Titinski.WebAPI.Services.ImageStorage
                 using (Stream requestStream = request.GetRequestStream())
                 {
                     rant.ImageFile.CopyTo(requestStream);
+                    _logger.LogInformation("Uploading File " + rant.ImageFile.FileName);
                 }
             }
             catch (WebException e)
@@ -72,9 +73,29 @@ namespace Titinski.WebAPI.Services.ImageStorage
             return fileName;
         }
 
-        public Rant GetRant(string path)
+        // from https://docs.microsoft.com/en-us/dotnet/framework/network-programming/how-to-download-files-with-ftp
+        public Stream LoadRant(string path)
         {
-            throw new NotImplementedException();
+            // Get the object used to communicate with the server.
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(IMAGES_DIR_ABSOLUTE_PATH + path);
+            request.Method = WebRequestMethods.Ftp.DownloadFile;
+
+            // This example assumes the FTP site uses anonymous logon.
+            request.Credentials = new NetworkCredential(_ftpConfig.Value.Username, _ftpConfig.Value.Password);
+
+            FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+
+            Stream responseStream = response.GetResponseStream();
+            var ms = new MemoryStream();
+            responseStream.CopyTo(ms);
+            //StreamReader reader = new StreamReader(responseStream);
+            //Console.WriteLine(reader.ReadToEnd());
+
+            Console.WriteLine($"Download Complete, status {response.StatusDescription}");
+
+            //reader.Close();
+            response.Close();
+            return ms;
         }
     }
 }

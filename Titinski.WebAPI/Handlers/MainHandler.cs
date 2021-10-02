@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Titinski.WebAPI.Interfaces.Repositories.ImageMetadataRepository;
 using Titinski.WebAPI.Interfaces.Storage;
@@ -38,6 +39,13 @@ namespace Titinski.WebAPI.Handlers
                 return new NoContentResult();
             }
             
+        }
+
+        public async Task<IActionResult> GetRantFileAsync(string path)
+        {
+            //Stream rantImage = _imageStorage.LoadRant(path);
+            // for now, assume only jpegs are saved on storage
+            return new FileStreamResult(_imageStorage.LoadRant(System.Net.WebUtility.UrlDecode(path)), "image/jpeg");
         }
 
         public async Task<IActionResult> GetAllRantsAsync()

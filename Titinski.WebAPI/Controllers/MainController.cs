@@ -33,6 +33,15 @@ namespace Titinski.WebAPI.Controllers
         }
 
         [HttpGet]
+        [Route("rantFile/{path}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> GetRantFileAsync(string path)
+        {
+            return await _mainHandler.GetRantFileAsync(path);
+        }
+
+        [HttpGet]
         [Route("rant")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]

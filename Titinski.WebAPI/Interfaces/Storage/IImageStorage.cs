@@ -10,6 +10,6 @@ namespace Titinski.WebAPI.Interfaces.Storage
         /// <param name="rant">The Rant object received from client</param>
         /// <returns>Image URI in the repo</returns>
         public string SaveRant(RantPost rant);
-        public Rant GetRant(string path);
+        public System.IO.Stream LoadRant(string path);
     }
 }
