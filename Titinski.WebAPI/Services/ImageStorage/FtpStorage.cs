@@ -83,19 +83,23 @@ namespace Titinski.WebAPI.Services.ImageStorage
             // This example assumes the FTP site uses anonymous logon.
             request.Credentials = new NetworkCredential(_ftpConfig.Value.Username, _ftpConfig.Value.Password);
 
-            FtpWebResponse response = (FtpWebResponse)request.GetResponse();
-
-            Stream responseStream = response.GetResponseStream();
-            var ms = new MemoryStream();
-            responseStream.CopyTo(ms);
-            //StreamReader reader = new StreamReader(responseStream);
-            //Console.WriteLine(reader.ReadToEnd());
-
-            Console.WriteLine($"Download Complete, status {response.StatusDescription}");
-
+            MemoryStream memoryStream = new MemoryStream();
+            try
+            {
+                FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+                
+                response.GetResponseStream().CopyTo(memoryStream);
+                response.Close();
+                Console.WriteLine($"Download Complete, status {response.StatusDescription}");
+            }
+            catch (Exception e)
+            {
+                memoryStream = null;
+                _logger.LogError(e, "Error getting FTP image");
+            }
             //reader.Close();
-            response.Close();
-            return ms;
+            
+            return memoryStream;
         }
     }
 }

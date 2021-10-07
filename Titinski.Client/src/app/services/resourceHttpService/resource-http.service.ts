@@ -6,7 +6,7 @@ import { Resource } from 'src/app/models/Resource';
 export class ResourceHttpService<T extends Resource> {
 
   constructor(
-    private httpClient: HttpClient,
+    protected httpClient: HttpClient,
     private url: string,
     private endpoint: string) {}
 

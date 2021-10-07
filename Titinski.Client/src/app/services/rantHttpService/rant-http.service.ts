@@ -7,12 +7,19 @@ import { ResourceHttpService } from '../resourceHttpService/resource-http.servic
 @Injectable({
   providedIn: 'root'
 })
-export class RantHttpService extends ResourceHttpService<Rant> {
+export class RantHttpService extends ResourceHttpService<Rant> {  
 
   constructor(httpClient: HttpClient) {
     super(
       httpClient,
       environment.baseUrl,
       'main/rant')
+
+      //this.httpClient = httpClient;
    }
+
+   getPhoto(path: string) {
+      return this.httpClient.get(environment.baseUrl + '/main/rantFile/' + path,
+       { responseType: 'blob' });
+  }
 }
