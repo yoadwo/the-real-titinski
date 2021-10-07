@@ -14,12 +14,11 @@ export class RantHttpService extends ResourceHttpService<Rant> {
       httpClient,
       environment.baseUrl,
       'main/rant')
-
-      //this.httpClient = httpClient;
    }
 
    getPhoto(path: string) {
-      return this.httpClient.get(environment.baseUrl + '/main/rantFile/' + path,
+      return this.httpClient.get(
+        environment.baseUrl + '/main/rantFile/' + path,
        { responseType: 'blob' });
   }
 }

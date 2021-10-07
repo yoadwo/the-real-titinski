@@ -15,8 +15,6 @@ namespace Titinski.WebAPI
 {
     public class Startup
     {
-        readonly string MyAllowSpecificOrigins = "allowedOrigins";
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -33,7 +31,6 @@ namespace Titinski.WebAPI
                 {
                     var allowedHosts = Configuration.GetSection("AllowedHosts").Get<string[]>();
                     builder
-                    //.WithOrigins(allowedHosts)
                     .SetIsOriginAllowed(origin => {
                         return allowedHosts.Contains(origin);
                         })
