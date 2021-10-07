@@ -51,9 +51,6 @@ namespace Titinski.WebAPI.Handlers
             }
             else
             {
-                /*var objResult = new ObjectResult(null);
-                objResult.StatusCode = Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError;
-                return objResult;*/
                 return new NoContentResult();
             }
             

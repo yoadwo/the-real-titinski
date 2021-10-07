@@ -87,8 +87,9 @@ namespace Titinski.WebAPI.Services.ImageStorage
             MemoryStream memoryStream = new MemoryStream();
             try
             {
-                _logger.LogInformation("Creating connection to FTP server");
-                FtpWebResponse response = (FtpWebResponse)request.GetResponse();                
+                _logger.LogInformation("Creating connection to FTP server");                
+                var webResponse = await request.GetResponseAsync();
+                var response = (FtpWebResponse)(webResponse);
 
                 await response.GetResponseStream().CopyToAsync(memoryStream);
                 _logger.LogInformation($"Logger: Download Complete, status {response.StatusDescription}");
@@ -97,7 +98,7 @@ namespace Titinski.WebAPI.Services.ImageStorage
             catch (Exception e)
             {
                 memoryStream = null;
-                _logger.LogError(e, "Error getting FTP image");
+                _logger.LogError(e, "Error getting FTP image from path '{0}'", path);
             }
             
             return memoryStream;
