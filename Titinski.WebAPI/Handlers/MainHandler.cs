@@ -44,16 +44,17 @@ namespace Titinski.WebAPI.Handlers
         public async Task<IActionResult> GetRantFileAsync(string path)
         {
             // for now, assume only jpegs are saved on storage
-            var imageStream = (_imageStorage.LoadRant(System.Net.WebUtility.UrlDecode(path)) as MemoryStream);
+            var imageStream = await _imageStorage.LoadRantAsync(System.Net.WebUtility.UrlDecode(path));
             if (imageStream != null)
             {
-                return new FileContentResult(imageStream.ToArray(), "image/jpeg");
+                return new FileContentResult((imageStream as MemoryStream).ToArray(), "image/jpeg");
             }
             else
             {
-                var objResult = new ObjectResult(null);
+                /*var objResult = new ObjectResult(null);
                 objResult.StatusCode = Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError;
-                return objResult;
+                return objResult;*/
+                return new NoContentResult();
             }
             
         }

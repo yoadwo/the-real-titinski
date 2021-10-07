@@ -42,10 +42,13 @@ namespace Titinski.WebAPI.Services.ImageStorage
             return Rants[Rants.IndexOf(r)].ToString();
         }
 
-        public Stream LoadRant(string id)
+        public async Task<Stream> LoadRantAsync(string id)
         {
             var rant = Rants.FirstOrDefault(r => r.ID == id);
-            return new FileStream(rant.Path, FileMode.Open, FileAccess.Read);
+            var fs = new FileStream(rant.Path, FileMode.Open, FileAccess.Read);
+            var ms = new MemoryStream();
+            await fs.CopyToAsync(ms);
+            return ms;
         }
     }
 }

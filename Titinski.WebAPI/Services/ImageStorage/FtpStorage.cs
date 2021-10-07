@@ -74,8 +74,9 @@ namespace Titinski.WebAPI.Services.ImageStorage
         }
 
         // from https://docs.microsoft.com/en-us/dotnet/framework/network-programming/how-to-download-files-with-ftp
-        public Stream LoadRant(string path)
+        public async System.Threading.Tasks.Task<Stream> LoadRantAsync(string path)
         {
+            _logger.LogDebug("FTP service: get image from path '{0}'", path);
             // Get the object used to communicate with the server.
             FtpWebRequest request = (FtpWebRequest)WebRequest.Create(IMAGES_DIR_ABSOLUTE_PATH + path);
             request.Method = WebRequestMethods.Ftp.DownloadFile;
@@ -86,18 +87,18 @@ namespace Titinski.WebAPI.Services.ImageStorage
             MemoryStream memoryStream = new MemoryStream();
             try
             {
-                FtpWebResponse response = (FtpWebResponse)request.GetResponse();
-                
-                response.GetResponseStream().CopyTo(memoryStream);
+                _logger.LogInformation("Creating connection to FTP server");
+                FtpWebResponse response = (FtpWebResponse)request.GetResponse();                
+
+                await response.GetResponseStream().CopyToAsync(memoryStream);
+                _logger.LogInformation($"Logger: Download Complete, status {response.StatusDescription}");
                 response.Close();
-                Console.WriteLine($"Download Complete, status {response.StatusDescription}");
             }
             catch (Exception e)
             {
                 memoryStream = null;
                 _logger.LogError(e, "Error getting FTP image");
             }
-            //reader.Close();
             
             return memoryStream;
         }
