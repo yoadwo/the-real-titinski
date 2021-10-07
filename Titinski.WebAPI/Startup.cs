@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Linq;
 using Titinski.WebAPI.Interfaces.Repositories.ImageMetadataRepository;
 using Titinski.WebAPI.Interfaces.Storage;
 using Titinski.WebAPI.Interfaces.UnitOfWork;
@@ -23,6 +25,18 @@ namespace Titinski.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    var allowedHosts = Configuration.GetSection("AllowedHosts").Get<string[]>();
+                    builder
+                    .SetIsOriginAllowed(origin => {
+                        return allowedHosts.Contains(origin);
+                        })
+                    .AllowAnyMethod();
+                });
+            });
             services.AddControllers();
             services.AddSwaggerGen();
             // handlers
@@ -54,10 +68,17 @@ namespace Titinski.WebAPI
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "The-Real-Titinski API V1");
             });
-
-            app.UseHttpsRedirection();
+            
+            if (!env.IsDevelopment())
+            {
+                // when working locally, causes silent exception
+                // need to figure out what is the real condition to check here
+                app.UseHttpsRedirection();
+            }            
 
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseAuthorization();
 

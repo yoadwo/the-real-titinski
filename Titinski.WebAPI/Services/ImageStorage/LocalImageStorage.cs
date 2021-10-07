@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Titinski.WebAPI.Interfaces.Storage;
@@ -20,7 +21,8 @@ namespace Titinski.WebAPI.Services.ImageStorage
                 var r = new Rant
                 {
                     ID = count.ToString(),
-                    Description = new System.IO.FileInfo(file).Name
+                    Description = new System.IO.FileInfo(file).Name,
+                    Path = file
                 };
                 Rants.Add(r);
                 count++;
@@ -32,16 +34,21 @@ namespace Titinski.WebAPI.Services.ImageStorage
             var r = new Rant
             {
                 ID = Rants.Count.ToString(),
-                Description = rant.Description
+                Description = rant.Description,
+                Path = rant.ImageFile.FileName
 
             };
             Rants.Add(r);
             return Rants[Rants.IndexOf(r)].ToString();
         }
 
-        public Rant GetRant(string id)
+        public async Task<Stream> LoadRantAsync(string id)
         {
-            return Rants.FirstOrDefault(r => r.ID == id);
+            var rant = Rants.FirstOrDefault(r => r.ID == id);
+            var fs = new FileStream(rant.Path, FileMode.Open, FileAccess.Read);
+            var ms = new MemoryStream();
+            await fs.CopyToAsync(ms);
+            return ms;
         }
     }
 }

@@ -35,7 +35,7 @@ namespace Titinski.WebAPI.Services.ImageStorage
             // Get the object used to communicate with the server.
             FtpWebRequest request = (FtpWebRequest)WebRequest.Create(IMAGES_DIR_ABSOLUTE_PATH + fileName);
             request.Method = WebRequestMethods.Ftp.UploadFile;
-            _logger.LogInformation("Upload request created. File name: " + fileName);
+            _logger.LogDebug("Upload request created. File name: " + fileName);
 
             // This example assumes the FTP site uses anonymous logon.
             request.Credentials = new NetworkCredential(_ftpConfig.Value.Username, _ftpConfig.Value.Password);
@@ -48,6 +48,7 @@ namespace Titinski.WebAPI.Services.ImageStorage
                 using (Stream requestStream = request.GetRequestStream())
                 {
                     rant.ImageFile.CopyTo(requestStream);
+                    _logger.LogInformation("Uploading File " + rant.ImageFile.FileName);
                 }
             }
             catch (WebException e)
@@ -72,9 +73,35 @@ namespace Titinski.WebAPI.Services.ImageStorage
             return fileName;
         }
 
-        public Rant GetRant(string path)
+        // from https://docs.microsoft.com/en-us/dotnet/framework/network-programming/how-to-download-files-with-ftp
+        public async System.Threading.Tasks.Task<Stream> LoadRantAsync(string path)
         {
-            throw new NotImplementedException();
+            _logger.LogDebug("FTP service: get image from path '{0}'", path);
+            // Get the object used to communicate with the server.
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(IMAGES_DIR_ABSOLUTE_PATH + path);
+            request.Method = WebRequestMethods.Ftp.DownloadFile;
+
+            // This example assumes the FTP site uses anonymous logon.
+            request.Credentials = new NetworkCredential(_ftpConfig.Value.Username, _ftpConfig.Value.Password);
+
+            MemoryStream memoryStream = new MemoryStream();
+            try
+            {
+                _logger.LogInformation("Creating connection to FTP server");                
+                var webResponse = await request.GetResponseAsync();
+                var response = (FtpWebResponse)(webResponse);
+
+                await response.GetResponseStream().CopyToAsync(memoryStream);
+                _logger.LogInformation($"Logger: Download Complete, status {response.StatusDescription}");
+                response.Close();
+            }
+            catch (Exception e)
+            {
+                memoryStream = null;
+                _logger.LogError(e, "Error getting FTP image from path '{0}'", path);
+            }
+            
+            return memoryStream;
         }
     }
 }

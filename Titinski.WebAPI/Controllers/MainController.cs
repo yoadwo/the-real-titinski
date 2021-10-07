@@ -26,10 +26,17 @@ namespace Titinski.WebAPI.Controllers
         [HttpGet]
         [Route("rant/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> GetRantAsync(string id)
         {
             return await _mainHandler.GetRantAsync(id);
+        }
+
+        [HttpGet]
+        [Route("rantFile/{path}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetRantFileAsync(string path)
+        {
+            return await _mainHandler.GetRantFileAsync(path);
         }
 
         [HttpGet]
@@ -41,9 +48,10 @@ namespace Titinski.WebAPI.Controllers
             return await _mainHandler.GetAllRantsAsync();
         }
 
-        [HttpPost("rantForm")]
+        [HttpPost("rant")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> SubmitForm([FromForm] Models.RantPost newPost)
         {
             try

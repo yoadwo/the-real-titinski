@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Titinski.WebAPI.Interfaces.Repositories.ImageMetadataRepository;
 using Titinski.WebAPI.Interfaces.Storage;
@@ -35,6 +36,21 @@ namespace Titinski.WebAPI.Handlers
             else
             {
                 _logger.LogInformation("No data exists for id {0}", id);
+                return new NoContentResult();
+            }
+            
+        }
+
+        public async Task<IActionResult> GetRantFileAsync(string path)
+        {
+            // for now, assume only jpegs are saved on storage
+            var imageStream = await _imageStorage.LoadRantAsync(System.Net.WebUtility.UrlDecode(path));
+            if (imageStream != null)
+            {
+                return new FileContentResult((imageStream as MemoryStream).ToArray(), "image/jpeg");
+            }
+            else
+            {
                 return new NoContentResult();
             }
             

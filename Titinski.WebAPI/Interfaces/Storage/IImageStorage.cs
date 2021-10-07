@@ -1,4 +1,5 @@
-﻿using Titinski.WebAPI.Models;
+﻿using System.Threading.Tasks;
+using Titinski.WebAPI.Models;
 
 namespace Titinski.WebAPI.Interfaces.Storage
 {
@@ -10,6 +11,6 @@ namespace Titinski.WebAPI.Interfaces.Storage
         /// <param name="rant">The Rant object received from client</param>
         /// <returns>Image URI in the repo</returns>
         public string SaveRant(RantPost rant);
-        public Rant GetRant(string path);
+        public Task<System.IO.Stream> LoadRantAsync(string path);
     }
 }

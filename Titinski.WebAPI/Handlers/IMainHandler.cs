@@ -10,7 +10,9 @@ namespace Titinski.WebAPI.Handlers
     public interface IMainHandler
     {
         public Task<IActionResult> GetRantAsync(string id);
+        public Task<IActionResult> GetRantFileAsync(string path);
         public Task<IActionResult> GetAllRantsAsync();
         public Task<IActionResult> OnPostUploadAsync(Models.RantPost newPost);
+        
     }
 }
