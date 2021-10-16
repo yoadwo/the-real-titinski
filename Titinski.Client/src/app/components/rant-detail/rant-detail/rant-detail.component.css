@@ -1,3 +1,14 @@
 .rant {
     height: 50vh;
 }
+
+.example-card {
+    max-width: 400px;
+    margin: 20px 0;
+  }
+  
+  .example-header-image {
+    background-image: url('/assets/images/profile-01.jpg');
+    background-size: cover;
+  }
+  
