@@ -1,4 +1,7 @@
-<app-sticky-header>The Real Titinski</app-sticky-header>
+<!-- <app-sticky-header>The Real Titinski</app-sticky-header> -->
+<mat-toolbar color="primary">
+  <span>The Real Titinski</span>
+</mat-toolbar>
 <div class="content">
   <div *ngFor="let rant of rants" class="rants-list">
     <app-rant-detail [rantDetail]="rant"></app-rant-detail>

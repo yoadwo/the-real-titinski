@@ -9,22 +9,27 @@
      <img src="fallbackImage.png" alt="Fallbackimage">
 </ng-template>
 </div> -->
-<mat-card *ngIf="rantDetail" class="example-card">
-    <mat-card-header>
-      <div mat-card-avatar class="example-header-image"></div>
-      <mat-card-title>Real_Titinski</mat-card-title>
-      <mat-card-subtitle>במרתף של אמא</mat-card-subtitle>
-    </mat-card-header>
-    <img *ngIf="!isImageLoading; else noImageFound"
-     mat-card-image [src]="imageToShow" alt="image described by following description">
-     <ng-template #noImageFound>
-        <img src="/assets/images/not-found-md.jpg" alt="Fallbackimage">
-   </ng-template>
-    <mat-card-content>
-        <p>{{rantDetail.description}}</p>
-    </mat-card-content>
-    <mat-card-actions>
+<mat-card *ngIf="rantDetail" class="app-card">
+  <mat-card-header>
+    <img mat-card-avatar class="app-header-image" src="/assets/images/profile-01.jpg" alt="profile pic of titinski">
+    <mat-card-title>Real_Titinski</mat-card-title>
+    <mat-card-subtitle>במרתף של אמא</mat-card-subtitle>
+  </mat-card-header>
+  <div *ngIf="!isImageLoading; else imageIsLoading">
+    <img *ngIf="imageToShow; else noImageFound" alt="image described by following description"
+      mat-card-image [src]="imageToShow">
+    <ng-template #noImageFound>
+      <img mat-card-image src="/assets/images/not-found-md.jpg" alt="a placeholder for image">
+    </ng-template>
+  </div>
+  <ng-template #imageIsLoading>
+    <img mat-card-image src="/assets/images/loader.gif" alt="a placeholder for image">
+  </ng-template>
+  <mat-card-content>
+    <p>{{rantDetail.description}}</p>
+  </mat-card-content>
+  <!-- <mat-card-actions>
       <button mat-button>LIKE</button>
       <button mat-button>SHARE</button>
-    </mat-card-actions>
-  </mat-card>
+    </mat-card-actions> -->
+</mat-card>

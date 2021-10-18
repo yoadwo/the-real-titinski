@@ -2,13 +2,23 @@
     height: 50vh;
 }
 
-.example-card {
-    max-width: 400px;
+.app-card {
+    /* max-width: 400px; */
+    width: 400px;
     margin: 20px 0;
   }
+
+  .mat-card-image{
+    /* min-width: 400px; */
+  }
+
+  .rant-image {
+    /* max-width: 54em;
+    max-height: 96em; */
+  }
   
-  .example-header-image {
-    background-image: url('/assets/images/profile-01.jpg');
-    background-size: cover;
+  .app-header-image {
+    /* background-image: url('/assets/images/profile-01.jpg');
+    background-size: cover; */
   }
   
