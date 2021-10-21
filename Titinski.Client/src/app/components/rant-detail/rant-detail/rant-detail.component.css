@@ -3,4 +3,8 @@
     width: 400px;
     margin: 20px 0;
   }
-  
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+}
