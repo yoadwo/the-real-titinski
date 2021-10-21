@@ -1,9 +1,22 @@
 <!-- <app-sticky-header>The Real Titinski</app-sticky-header> -->
 <mat-toolbar color="primary">
-  <span>The Real Titinski</span>
+  <!-- <img class="app-header-image" src="/assets/images/profile-01.jpg" alt="profile pic of titinski"> -->
+  <span>The Real Titinski     
+  </span>
 </mat-toolbar>
+<div>
+  <!-- <img class ="app-top-image" src="/assets/images/top-image.jpg" alt=""> -->
+  <div class="top-card-container">
+  <mat-card class="app-top-card">
+    <mat-card-title-group>
+      <mat-card-title>טיטינסקים לא משלמים חניה</mat-card-title>
+      <mat-card-subtitle>הם לא משלמים על אחסון אתרים. זה מעצבן.</mat-card-subtitle>
+      <mat-card-subtitle>והנה עוד כמה דברים מעצבנים.</mat-card-subtitle>
+      <img mat-card-md-image src="/assets/images/top-image.jpg" >
+    </mat-card-title-group>
+  </mat-card>
+</div>
+</div>
 <div class="content">
-  <div *ngFor="let rant of rants" class="rants-list">
-    <app-rant-detail [rantDetail]="rant"></app-rant-detail>
-  </div>  
+  <app-rant-detail *ngFor="let rant of rants" [rantDetail]="rant"></app-rant-detail>
 </div>
