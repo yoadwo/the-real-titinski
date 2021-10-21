@@ -4,6 +4,10 @@
     margin: 20px 0;
   }
 
+mat-card-header {
+  margin-bottom: 1%;
+}
+
 .spinner-container {
   display: flex;
   justify-content: center;

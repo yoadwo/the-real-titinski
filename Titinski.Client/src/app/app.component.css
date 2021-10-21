@@ -3,27 +3,29 @@ p {
 }
 
 .content {
-  padding-top: 75px;
+  padding-top: 20px;
 }
 
-/* .rants-list:nth-child(odd) {
-  background-color: rgba(0, 0, 0, 0.2);
+.app-top-card {
+  /* max-width: 400px; */
+  width: 400px;
+  margin-top: 20px;
 }
 
-.rants-list:nth-child(even) {
-  background-color: rgba(0, 0, 0, 0.05);
-} */
-
-app-sticky-header {
-  z-index: 1000;
-  color: white;
-  background-color: #ab47bc;
-  font-size: 2rem;
-  height: 75px;
+.top-card-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
+  justify-content: center;  
+}
+
+mat-card-title-group {
+  direction: rtl;
+}
+
+.app-header-image {
+  /* for navbar, unused at the moment */
+  height: 100%;
+  padding: 2rem ;
+  border-radius: 50%;
 }
 
 app-rant-detail {
