@@ -6,13 +6,13 @@ p {
   padding-top: 75px;
 }
 
-.rants-list:nth-child(odd) {
+/* .rants-list:nth-child(odd) {
   background-color: rgba(0, 0, 0, 0.2);
 }
 
 .rants-list:nth-child(even) {
   background-color: rgba(0, 0, 0, 0.05);
-}
+} */
 
 app-sticky-header {
   z-index: 1000;
@@ -24,4 +24,11 @@ app-sticky-header {
   justify-content: center;
   align-items: center;
   width: 100%;
+}
+
+app-rant-detail {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
 }

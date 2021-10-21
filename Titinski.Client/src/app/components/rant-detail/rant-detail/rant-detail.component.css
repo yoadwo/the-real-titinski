@@ -1,3 +1,10 @@
-.rant {
-    height: 50vh;
+.app-card {
+    /* max-width: 400px; */
+    width: 400px;
+    margin: 20px 0;
+  }
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
 }

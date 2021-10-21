@@ -1,12 +1,25 @@
-<div *ngIf="rantDetail">
-    <p>{{rantDetail.id}}</p>
+<mat-card *ngIf="rantDetail" class="app-card">
+  <mat-card-header>
+    <img mat-card-avatar class="app-header-image" src="/assets/images/profile-01.jpg" alt="profile pic of titinski">
+    <mat-card-title>Real_Titinski</mat-card-title>
+    <mat-card-subtitle>במרתף של אמא</mat-card-subtitle>
+  </mat-card-header>
+  <div *ngIf="!isImageLoading; else imageIsLoading">
+    <img *ngIf="imageToShow; else noImageFound" alt="image described by following description"
+      mat-card-image [src]="imageToShow">
+    <ng-template #noImageFound>
+      <img mat-card-image src="/assets/images/not-found-md.jpg" alt="a placeholder for image">
+    </ng-template>
+  </div>
+  <ng-template #imageIsLoading>
+    <!-- <img mat-card-image src="/assets/images/loader.gif" alt="a placeholder for image"> -->
+    <div class="spinner-container"><mat-spinner></mat-spinner></div>
+  </ng-template>
+  <mat-card-content>
     <p>{{rantDetail.description}}</p>
-    <p>{{rantDetail.path}}</p>
-    <img [src]="imageToShow"
-     alt="Place image title"
-     *ngIf="!isImageLoading; else noImageFound">
-<ng-template #noImageFound>
-    <!-- TODO: all fallback image -->
-     <img src="fallbackImage.png" alt="Fallbackimage">
-</ng-template>
-</div>
+  </mat-card-content>
+  <!-- <mat-card-actions>
+      <button mat-button>LIKE</button>
+      <button mat-button>SHARE</button>
+    </mat-card-actions> -->
+</mat-card>
