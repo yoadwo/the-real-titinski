@@ -29,7 +29,9 @@ namespace Titinski.WebAPI
                     {
                         return;
                     }
-                    config.AddAzureKeyVault("https://titinski-test.vault.azure.net/");
+
+                    var builtConfig = config.Build();
+                    config.AddAzureKeyVault($"https://{builtConfig["KeyVaultName"]}.vault.azure.net/");
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
