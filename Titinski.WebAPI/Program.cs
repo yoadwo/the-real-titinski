@@ -23,6 +23,14 @@ namespace Titinski.WebAPI
                     logging.ClearProviders();
                     logging.AddConsole();
                 })
+                .ConfigureAppConfiguration((context, config) =>
+                {
+                    if (context.HostingEnvironment.IsDevelopment())
+                    {
+                        return;
+                    }
+                    config.AddAzureKeyVault("https://titinski-test.vault.azure.net/");
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
